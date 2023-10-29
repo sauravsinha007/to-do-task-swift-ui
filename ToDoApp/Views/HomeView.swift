@@ -9,12 +9,13 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject var taskViewModel : TaskViewModel = TaskViewModel()
+    @StateObject var taskViewModel : TaskViewModel = TaskViewModelFactory.createTaskViewModel()
     @State private var pickerFilter : [String] = ["Active","Completed"]
     @State private var defaultPickerItem = "Active"
     @State private var showAddNewTaskView : Bool = false
     @State private var showTaskDetailView : Bool = false
-    @State private var selectedTaskDetail : Task = Task(id: 0, name: "", description: "", isCompleted: true, finishDate: Date())
+    @State private var selectedTaskDetail : Task = Task.createEmptyTask()
+    //Task(id: 0, name: "", description: "", isCompleted: true, finishDate: Date())
     @State private var refreshTaskList : Bool = true
     
     var body: some View {
@@ -26,7 +27,7 @@ struct HomeView: View {
                 }
             }.pickerStyle(.segmented)
                 .onChange(of: defaultPickerItem) { newValue in
-                    self.taskViewModel.getTasks(isCompleted: defaultPickerItem == "Active")
+                    self.taskViewModel.getTasks(isCompleted: (defaultPickerItem == "Active" ? false : true))
                 }
             
             List(taskViewModel.tasks, id: \.id) { task in
@@ -44,7 +45,14 @@ struct HomeView: View {
             }.onAppear{
                 taskViewModel.getTasks(isCompleted: true)
             }.onChange(of: refreshTaskList, perform: { newValue in
-                self.taskViewModel.getTasks(isCompleted: defaultPickerItem == "Active")
+                self.taskViewModel.getTasks(isCompleted: (defaultPickerItem == "Active") ? false : true)
+            }).alert("Task Error",
+                     isPresented: $taskViewModel.isGetttingError, actions: {
+                Button(action: {}, label: {
+                    Text("OK")
+                })
+            },message: {
+                Text(taskViewModel.errorMsg)
             })
             
             .listStyle(.plain)

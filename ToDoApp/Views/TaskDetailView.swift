@@ -98,8 +98,8 @@ struct TaskDetailView: View {
 
 struct TaskDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TaskDetailView(taskViewModel: TaskViewModel(),
-                       selectedTask: .constant(Task.createMockTaskList().first!),
+        TaskDetailView(taskViewModel: TaskViewModelFactory.createTaskViewModel(),
+                       selectedTask: .constant(Task.createEmptyTask()), //Task.createMockTaskList().first!
                        showTaskDetailView:  .constant(false), refreshTaskList: .constant(false))
     }
 }

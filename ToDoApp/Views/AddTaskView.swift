@@ -10,7 +10,7 @@ import SwiftUI
 struct AddTaskView: View {
     
     @ObservedObject var taskViewModel : TaskViewModel
-    @State private var taskToAdd : Task = Task(id: 0, name: "", description: "", isCompleted: false, finishDate: Date())
+    @State private var taskToAdd : Task = Task.createEmptyTask()
     @Binding var showAddTaskView: Bool
     @Binding var refreshTaskList: Bool
     @State private var showCheckAlert : Bool = false
@@ -97,6 +97,6 @@ struct AddTaskView: View {
 
 struct AddTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskView(taskViewModel: TaskViewModel(), showAddTaskView: .constant(false), refreshTaskList: .constant(false))
+        AddTaskView(taskViewModel: TaskViewModelFactory.createTaskViewModel(), showAddTaskView: .constant(false), refreshTaskList: .constant(false))
     }
 }
